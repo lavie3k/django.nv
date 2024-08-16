@@ -1,13 +1,13 @@
-name: Django                                  # workflow name
+name: Django
 
 on:
-  push:                                       
-    branches:                                 # similar to "only" in GitLab
+  push:
+    branches:
       - main
 
 jobs:
   build:
-    runs-on: ubuntu-20.04                    # similar to "image" in GitLab
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
 
@@ -43,6 +43,7 @@ jobs:
 
   sonarqube:
     runs-on: ubuntu-20.04
+    needs: test
     steps:
     - uses: actions/checkout@v2
       with:
@@ -57,9 +58,10 @@ jobs:
         projectBaseDir: .
         args: >
           -Dsonar.projectKey=Django
+          
   integration:
     runs-on: ubuntu-20.04
-    needs: test
+    needs: sonarqube
     steps:
       - run: echo "This is an integration step"
       - run: exit 1
@@ -70,5 +72,3 @@ jobs:
     needs: integration
     steps:
       - run: echo "This is a deploy step."
-
-
